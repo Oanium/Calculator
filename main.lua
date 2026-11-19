@@ -72,7 +72,7 @@ function love.mousepressed(x, y, button, istouch, presses)
 
                 v.pressed = true
                 addToNumDisp = tostring(v.data)
-                if #numDisplayed < 15 then
+                if #numDisplayed <= 15 then
                     table.insert(numDisplayed, addToNumDisp)
                 end            
             end
@@ -82,7 +82,6 @@ function love.mousepressed(x, y, button, istouch, presses)
             x <= v.x + v.width and
             y >= v.y and
             y <= v.y + v.height then
-                
                 
                 if v.data == '+' then
                     wuhOp = '+'
@@ -157,6 +156,10 @@ function love.mousepressed(x, y, button, istouch, presses)
                                 numResult = num2 / num1
                             end
                         end
+
+                    for k in pairs(storeNumbers) do
+                        storeNumbers[k] = nil
+                    end
                     for k in pairs(numDisplayed) do
                         numDisplayed[k] = nil
                     end
@@ -201,14 +204,19 @@ function love.draw()
         if v.pressed then
             if numDisplayed ~= nil then
                 for i,v in ipairs(numDisplayed) do
-                    love.graphics.print(v, dispBox.x + (i*10), dispBox.y + dispBox.height-12)
+                    love.graphics.print(v, dispBox.x + (i*10)-10, dispBox.y)
+                end
+            end
+            if storeNumbers ~= nil then
+                for i,v in ipairs(storeNumbers) do
+                    love.graphics.print(v, dispBox.x + (i*10)-10, dispBox.y+14)
                 end
             end
         end
     end
 
     if numResult ~= nil then
-        love.graphics.print(numResult, 100, 100)
+        love.graphics.print(numResult, dispBox.x, dispBox.y + dispBox.height-14)
     end
     for i,v in pairs(operators) do
         v:render()
