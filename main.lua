@@ -26,7 +26,8 @@ function love.load()
     operators['-'] = ClickBox(420, 255, 50, 50, '-')
     operators['*'] = ClickBox(420, 310, 50, 50, '*')
     operators['/'] = ClickBox(420, 365, 50, 50, '/')
-
+    operators['='] = ClickBox(420, 365+55, 50, 50, '=')
+    operators['C'] = ClickBox(420+55, 200, 50, 50, 'C')
 
     currentPress = false
 
@@ -80,77 +81,100 @@ function love.mousepressed(x, y, button, istouch, presses)
             x <= v.x + v.width and
             y >= v.y and
             y <= v.y + v.height then
-
-                operatorCount = operatorCount + 1
-
-                if operatorCount == 2 then
-                    numResult = 0
-
-                    if v.data == '+' then
-                        stringConc = ""
-                        for i,v in ipairs(numDisplayed) do
-                            stringConc = stringConc .. v
-                        end
-                        numResult = numResult + tonumber(stringConc)
-                        stringConc = ""
-                        for i, v in ipairs(storeNumbers) do
-                           stringConc = stringConc .. v
-                        end
-                        
-                        numResult = numResult + tonumber(stringConc)
-                        operatorCount = 0
-
-                    elseif v.data == '-' then
-                        stringConc = ""
-                        for i,v in ipairs(numDisplayed) do
-                            stringConc = stringConc .. v
-                        end
-                        numResult = numResult + tonumber(stringConc)
-                        stringConc = ""
-                        for i, v in ipairs(storeNumbers) do
-                           stringConc = stringConc .. v
-                        end
-                        
-                        numResult = numResult - tonumber(stringConc)
-                        operatorCount = 0 
-                    elseif v.data == '*' then
-                        stringConc = ""
-                        for i,v in ipairs(numDisplayed) do
-                            stringConc = stringConc .. v
-                        end
-                        numResult = numResult + tonumber(stringConc)
-                        stringConc = ""
-                        for i, v in ipairs(storeNumbers) do
-                           stringConc = stringConc .. v
-                        end
-                        
-                        numResult = numResult * tonumber(stringConc) 
-                        operatorCount = 0
-                    elseif v.data == '/' then
-                        local num1 = 0
-                        local num2 = 0
-                        stringConc = ""
-
-                        for i,v in ipairs(numDisplayed) do
-                            stringConc = stringConc .. v
-                        end
-                        num1 = tonumber(stringConc)
-
-                        stringConc = ""
-                        for i, v in ipairs(storeNumbers) do
-                           stringConc = stringConc .. v
-                        end
-
-                        num2 = tonumber(stringConc)
-                        numResult = num1/num2
-
-                        operatorCount = 0
+                
+                
+                if v.data == '+' then
+                    wuhOp = '+'
+                    
+                    for i, v in ipairs(numDisplayed) do
+                        storeNumbers[i] = v
                     end
 
-                end
-                storeNumbers = numDisplayed
-                for k in pairs(numDisplayed) do
-                    numDisplayed[k] = nil
+                    for k in pairs(numDisplayed) do
+                        numDisplayed[k] = nil
+                    end
+                elseif v.data == '-' then
+                    wuhOp = '-'
+                    
+                    for i, v in ipairs(numDisplayed) do
+                        storeNumbers[i] = v
+                    end
+
+                    for k in pairs(numDisplayed) do
+                        numDisplayed[k] = nil
+                    end
+                elseif v.data == '*' then
+                    wuhOp = '*'
+                    
+                    for i, v in ipairs(numDisplayed) do
+                        storeNumbers[i] = v
+                    end
+
+                    for k in pairs(numDisplayed) do
+                        numDisplayed[k] = nil
+                    end
+                elseif v.data == '/' then
+                    wuhOp = '/'
+
+                    for i, v in ipairs(numDisplayed) do
+                        storeNumbers[i] = v
+                    end
+
+                    for k in pairs(numDisplayed) do
+                        numDisplayed[k] = nil
+                    end
+                elseif v.data == '=' then
+
+                    if #storeNumbers == 0 then
+                        stringConc = ""
+                        for i,v in ipairs(numDisplayed) do
+                            stringConc = stringConc .. v
+                        end
+                        numResult = tonumber(stringConc)
+
+                        break
+                    end
+                    stringConc = ""
+                    for i,v in ipairs(numDisplayed) do
+                        stringConc = stringConc .. v
+                    end
+                    num1 = tonumber(stringConc)
+
+                    
+
+                    stringConc  = ""
+                    for i,v in ipairs(storeNumbers) do
+                        stringConc = stringConc .. v
+                    end
+                    num2 = tonumber(stringConc)
+                    
+                    numResult = 0
+                        if wuhOp == '+' then
+                            numResult = num1 + num2
+                        elseif wuhOp == '-' then
+                            numResult = num2 - num1
+                        elseif wuhOp == '*' then
+                            numResult = num1 * num2
+                        elseif wuhOp == '/' then
+                            numResult = num2 / num1
+                        end
+                    for k in pairs(numDisplayed) do
+                        numDisplayed[k] = nil
+                    end
+                elseif v.data == 'C' then
+                    if #numDisplayed ~= 0 then
+                        for v in pairs(numDisplayed) do
+                            numDisplayed[v] = nil
+                        end
+                    end
+
+                    if #storeNumbers ~= 0 then
+                        for v in pairs(storeNumbers) do
+                            storeNumbers[v] = nil
+                        end
+                    end
+
+                    numResult = 0
                 end
             end
         end
@@ -161,11 +185,18 @@ function check1()
     for i, v in ipairs(numDisplayed) do
        print(v)
     end
+    for i, v in ipairs(storeNumbers) do
+       print(v)
+    end
 end
 
 
+function whenEqualPressed()
+
+end
+
 function love.draw()
-    dispBox:render()
+    love.graphics.rectangle("line", 255, 100, 160, 50)
     for i,v in pairs(numbers) do
         v:render()
         if v.pressed then
@@ -177,7 +208,7 @@ function love.draw()
         end
     end
 
-    love.graphics.print(tostring(numResult), 100, 100)
+    love.graphics.print(numResult, 100, 100)
 
     for i,v in pairs(operators) do
         v:render()
