@@ -2,32 +2,32 @@ Class = require "class"
 require "clickBox"
 
 function love.load()
-    dispBox = ClickBox(255, 100, 160, 50, "")
+    dispBox = ClickBox(55, 100, 160, 50, "")
     
     numbers = {}
 
     --the tostring at the end is the data
     for i = 1, 3 do
-        numbers[tostring(i)] = ClickBox(200+(i*55), 200, 50, 50, tostring(i))
+        numbers[tostring(i)] = ClickBox((i*55), 200, 50, 50, tostring(i))
     end
 
     for i = 4, 6 do
-        numbers[tostring(i)] = ClickBox(200+(i*55)-(55*3), 255, 50, 50, tostring(i))
+        numbers[tostring(i)] = ClickBox((i*55)-(55*3), 255, 50, 50, tostring(i))
     end
 
     for i = 7, 9 do
-        numbers[tostring(i)] = ClickBox(200+(i*55)-(55*6), 310, 50, 50, tostring(i))
+        numbers[tostring(i)] = ClickBox((i*55)-(55*6), 310, 50, 50, tostring(i))
     end
 
-    numbers["0"] = ClickBox(310, 365, 50, 50, "0")
+    numbers["0"] = ClickBox(110, 365, 50, 50, "0")
 
     operators  = {}
-    operators['+'] = ClickBox(420, 200, 50, 50, '+')
-    operators['-'] = ClickBox(420+55, 200, 50, 50, '-')
-    operators['*'] = ClickBox(420, 255, 50, 50, '*')
-    operators['/'] = ClickBox(420+55, 255, 50, 50, '/')
-    operators['='] = ClickBox(420, 365, 50, 50, '=')
-    operators['C'] = ClickBox(420+55, 365, 50, 50, 'C')
+    operators['+'] = ClickBox(165+55, 200, 50, 50, '+')
+    operators['-'] = ClickBox(165+110, 200, 50, 50, '-')
+    operators['*'] = ClickBox(165+55, 255, 50, 50, '*')
+    operators['/'] = ClickBox(165+110, 255, 50, 50, '/')
+    operators['='] = ClickBox(165+55, 365, 50, 50, '=')
+    operators['C'] = ClickBox(165+110, 365, 50, 50, 'C')
 
     currentPress = false
 
@@ -198,7 +198,7 @@ function whenEqualPressed()
 end
 
 function love.draw()
-    love.graphics.rectangle("line", 255, 100, 160, 50)
+    love.graphics.rectangle("line", 55, 100, 160, 50)
     for i,v in pairs(numbers) do
         v:render()
         if v.pressed then
