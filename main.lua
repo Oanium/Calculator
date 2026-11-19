@@ -23,11 +23,11 @@ function love.load()
 
     operators  = {}
     operators['+'] = ClickBox(420, 200, 50, 50, '+')
-    operators['-'] = ClickBox(420, 255, 50, 50, '-')
-    operators['*'] = ClickBox(420, 310, 50, 50, '*')
-    operators['/'] = ClickBox(420, 365, 50, 50, '/')
-    operators['='] = ClickBox(420, 365+55, 50, 50, '=')
-    operators['C'] = ClickBox(420+55, 200, 50, 50, 'C')
+    operators['-'] = ClickBox(420+55, 200, 50, 50, '-')
+    operators['*'] = ClickBox(420, 255, 50, 50, '*')
+    operators['/'] = ClickBox(420+55, 255, 50, 50, '/')
+    operators['='] = ClickBox(420, 365, 50, 50, '=')
+    operators['C'] = ClickBox(420+55, 365, 50, 50, 'C')
 
     currentPress = false
 
@@ -72,8 +72,9 @@ function love.mousepressed(x, y, button, istouch, presses)
 
                 v.pressed = true
                 addToNumDisp = tostring(v.data)
-                table.insert(numDisplayed, addToNumDisp)
-                
+                if #numDisplayed < 15 then
+                    table.insert(numDisplayed, addToNumDisp)
+                end            
             end
         end
         for i, v in pairs(operators) do
@@ -85,10 +86,8 @@ function love.mousepressed(x, y, button, istouch, presses)
                 
                 if v.data == '+' then
                     wuhOp = '+'
-                    
-                    for i, v in ipairs(numDisplayed) do
-                        storeNumbers[i] = v
-                    end
+
+                    storeNumbers = {unpack(numDisplayed)}
 
                     for k in pairs(numDisplayed) do
                         numDisplayed[k] = nil
@@ -96,9 +95,7 @@ function love.mousepressed(x, y, button, istouch, presses)
                 elseif v.data == '-' then
                     wuhOp = '-'
                     
-                    for i, v in ipairs(numDisplayed) do
-                        storeNumbers[i] = v
-                    end
+                    storeNumbers = {unpack(numDisplayed)}
 
                     for k in pairs(numDisplayed) do
                         numDisplayed[k] = nil
@@ -106,9 +103,7 @@ function love.mousepressed(x, y, button, istouch, presses)
                 elseif v.data == '*' then
                     wuhOp = '*'
                     
-                    for i, v in ipairs(numDisplayed) do
-                        storeNumbers[i] = v
-                    end
+                    storeNumbers = {unpack(numDisplayed)}
 
                     for k in pairs(numDisplayed) do
                         numDisplayed[k] = nil
@@ -116,9 +111,7 @@ function love.mousepressed(x, y, button, istouch, presses)
                 elseif v.data == '/' then
                     wuhOp = '/'
 
-                    for i, v in ipairs(numDisplayed) do
-                        storeNumbers[i] = v
-                    end
+                    storeNumbers = {unpack(numDisplayed)}
 
                     for k in pairs(numDisplayed) do
                         numDisplayed[k] = nil
@@ -140,8 +133,6 @@ function love.mousepressed(x, y, button, istouch, presses)
                     end
                     num1 = tonumber(stringConc)
 
-                    
-
                     stringConc  = ""
                     for i,v in ipairs(storeNumbers) do
                         stringConc = stringConc .. v
@@ -150,13 +141,21 @@ function love.mousepressed(x, y, button, istouch, presses)
                     
                     numResult = 0
                         if wuhOp == '+' then
-                            numResult = num1 + num2
+                            if num1 ~= nil then 
+                                numResult = num1 + num2
+                            end
                         elseif wuhOp == '-' then
-                            numResult = num2 - num1
+                            if num1 ~= nil then
+                                numResult = num2 - num1
+                            end
                         elseif wuhOp == '*' then
-                            numResult = num1 * num2
+                            if num1 ~= nil then
+                                numResult = num1 * num2
+                            end
                         elseif wuhOp == '/' then
-                            numResult = num2 / num1
+                            if num1 ~= nil then
+                                numResult = num2 / num1
+                            end
                         end
                     for k in pairs(numDisplayed) do
                         numDisplayed[k] = nil
@@ -208,8 +207,9 @@ function love.draw()
         end
     end
 
-    love.graphics.print(numResult, 100, 100)
-
+    if numResult ~= nil then
+        love.graphics.print(numResult, 100, 100)
+    end
     for i,v in pairs(operators) do
         v:render()
     end
