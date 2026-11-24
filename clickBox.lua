@@ -5,10 +5,12 @@ function ClickBox:init(x, y, width, height, data)
 	self.y = y
 	self.width = width
 	self.height = height
-	self.fill = "line"
+	self.fill = "fill"
 	self.data = data
 	self.pressed = false
 end
+
+--[[
 
 function ClickBox:checkCollision()
 	if love.mouse.getX() >= self.x and
@@ -20,10 +22,12 @@ function ClickBox:checkCollision()
     	self.fill = "line"
     end
 end
-
+]]
 
 
 function ClickBox:render()
+	love.graphics.setColor(253/255, 253/255, 253/255)
 	love.graphics.rectangle(self.fill, self.x, self.y, self.width, self.height)
+	love.graphics.setColor(0, 0, 0)
 	love.graphics.print(self.data, self.x+(self.width/2)-4, self.y+(self.height/2)-4)
 end

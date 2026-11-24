@@ -6,6 +6,7 @@ function love.load()
     
     numbers = {}
 
+    click = love.audio.newSource("click.ogg", "static")
     --the tostring at the end is the data
     for i = 1, 3 do
         numbers[tostring(i)] = ClickBox((i*55), 200, 50, 50, tostring(i))
@@ -37,6 +38,8 @@ function love.load()
     numResult = 0
     love.keyboard.keysPressed = {}
     operatorCount = 0
+
+    love.graphics.setBackgroundColor(162/255, 157/255, 156/255)
 end
 
 function love.keypressed(key)
@@ -48,6 +51,7 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
+    --[[
     dispBox:checkCollision()
     for i, v in pairs(numbers) do
         v:checkCollision()
@@ -55,10 +59,12 @@ function love.update(dt)
     for i, v in pairs(operators) do
         v:checkCollision()
     end
-    if love.keyboard.wasPressed('up') then
-        check1()
-    end
 
+    ]]
+
+    if numResult == nil then 
+        numResult = 0
+    end
     love.keyboard.keysPressed = {}
 end
 
@@ -70,6 +76,7 @@ function love.mousepressed(x, y, button, istouch, presses)
             y >= v.y and
             y <= v.y + v.height then
 
+                love.audio.play(click)
                 v.pressed = true
                 addToNumDisp = tostring(v.data)
                 if #numDisplayed <= 15 then
@@ -83,6 +90,7 @@ function love.mousepressed(x, y, button, istouch, presses)
             y >= v.y and
             y <= v.y + v.height then
                 
+                love.audio.play(click)
                 if v.data == '+' then
                     wuhOp = '+'
 
@@ -183,27 +191,19 @@ function love.mousepressed(x, y, button, istouch, presses)
     end
 end
 
-function check1()
-    for i, v in ipairs(numDisplayed) do
-       print(v)
-    end
-    for i, v in ipairs(storeNumbers) do
-       print(v)
-    end
-end
-
-
-function whenEqualPressed()
-
-end
-
 function love.draw()
-    love.graphics.rectangle("line", 55, 100, 160, 50)
+    love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", 55, 100, 160, 50)
+    love.graphics.setColor(1, 1, 1)
+    
     for i,v in pairs(numbers) do
+        
         v:render()
         if v.pressed then
             if numDisplayed ~= nil then
+                love.graphics.setColor(1, 1, 1)
                 for i,v in ipairs(numDisplayed) do
+
                     love.graphics.print(v, dispBox.x + (i*10)-10, dispBox.y)
                 end
             end
@@ -216,6 +216,7 @@ function love.draw()
     end
 
     if numResult ~= nil then
+        love.graphics.setColor(1, 1, 1)
         love.graphics.print(numResult, dispBox.x, dispBox.y + dispBox.height-14)
     end
     for i,v in pairs(operators) do
